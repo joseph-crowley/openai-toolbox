@@ -1,7 +1,20 @@
 from django.shortcuts import render
 from django.http import JsonResponse
+from django.urls import reverse
 import json
 import openai
+
+def home(request):
+    context = {
+        'chat_url': 'chat',
+        'panel_images': [
+            {'img': 'static/assets/images/home/img1.jpg', 'url': '/chat'},
+            {'img': 'static/assets/images/home/img2.jpg', 'url': '/chat'},
+            {'img': 'static/assets/images/home/img3.jpg', 'url': '/chat'},
+        ]
+    }
+
+    return render(request, 'home.html', context)
 
 def submit_message(request):
     if request.method == 'POST':
