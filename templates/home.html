@@ -1,19 +1,18 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
-<div class="container">
+<div class="container mt-5">
     <div class="row">
         {% for image in panel_images %}
-            <div class="col-2">
-                <a href="{% url 'chat' %}">
+            <div class="col-4">
+                <a href="{{ image.url }}">
                     <img src="{{ image.img }}" class="img-fluid">
                 </a>
-                <div class="caption">{{ image.caption }}</div>
+                <div class="caption text-center mt-3">{{ image.caption }}</div>
             </div>
         {% endfor %}
     </div>
 </div>
 {% endblock %}
-
-
 
