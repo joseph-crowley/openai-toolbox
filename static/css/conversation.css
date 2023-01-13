@@ -1,0 +1,46 @@
+#conversation {
+  width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f3f3f3;
+  border-radius: 5px;
+}
+
+.message-container {
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
+
+.message-container.user {
+  background-color: #e2e2e2;
+  text-align: right;
+}
+
+.message-container.bot {
+  background-color: #d3d3d3;
+  text-align: left;
+}
+
+#submit-form {
+  width: 400px;
+  margin: 0 auto;
+  padding-top: 20px;
+}
+
+#submit-form input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+}
+
+#submit-form button {
+  width: 100%;
+  padding: 10px;
+  background-color: #00b3b3;
+  color: #fff;
+  border-radius: 5px;
+  border: 1px solid #00b3b3;
+}

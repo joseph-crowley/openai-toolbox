@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+  <title>Chat</title>
+  <link rel="stylesheet" type="text/css" href="{% static 'css/conversation.css' %}">
+</head>
+<body>
+  <div id="conversation">
+    {% for message in conversation %}
+      {% if message.user_input %}
+        <div class="message-container user">
+          <p>{{ message.user_input }}</p>
+        </div>
+      {% else %}
+        <div class="message-container bot">
+          <p>{{ message.bot_response }}</p>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+
+  <form id="submit-form" method="POST">
+    {% csrf_token %}
+    <input id="message" type="text" name="message">
+    <button type="submit">Submit</button>
+  </form>
+  <script type="text/javascript" src="{% static 'js/conversation.js' %}"></script>
+</body>
+</html>
+
