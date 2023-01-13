@@ -5,13 +5,13 @@ Installation
 
 ### Clone the repository and navigate to the project directory.
 
-    git clone https://github.com/[your-username]/django-photo-chat-app.git
+    git clone https://github.com/joseph-crowley/openai-toolbox.git
     cd django-photo-chat-app
 
 ### Create a new conda environment and activate it.
 
-    conda create --name photo-chat-app --file conda.env
-    conda activate photo-chat-app
+    conda create --name gpt --file conda.env
+    conda activate gpt
 
 ### Copy the .env.example file to a new file called .env and add your OpenAI API key.
 
