@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from django.urls import reverse
 import json
+import os
 import openai
 
 def home(request):
@@ -19,7 +20,7 @@ def home(request):
 def submit_message(request):
     if request.method == 'POST':
         user_input = request.POST['message']
-        openai.api_key = "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"
+        openai.api_key = os.environ.get("OPENAI_API_KEY")
 
         # generate text
         response = openai.Completion.create(
