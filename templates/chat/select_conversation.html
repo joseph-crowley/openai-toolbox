@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <form id="select_conversation" method="post" action="{% url 'submit_conversation' %}">
+        {% csrf_token %}
+        <label for="conversation_id">Select a conversation ID:</label>
+        <select id="conversation_id" name="conversation_id">
+            {% for conversation_id in conversation_ids %}
+                <option value="{{ conversation_id }}">{{ conversation_id }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Submit</button>
+    </form>
+{% endblock %}
+

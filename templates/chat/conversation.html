@@ -1,28 +1,31 @@
 <!DOCTYPE html>
+
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-    <div class="conversation-container">
-        <div class="conversation-history">
-            {% for message in conversation reversed %}
-              {% if message.user_input %}
-                <div class="message-container bot bot-message">
-                  <p>{{ message.bot_response }}</p>
-                </div>
-                <div class="message-container user user-message">
-                  <p>{{ message.user_input }}</p>
-                </div>
-              {% else %}
-                <div class="message-container bot">
-                  <p>Failed to create message. reload and try again.</p>
-                </div>
-              {% endif %}
-            {% endfor %}
-        </div>
-        <form id="conversation-form" method="post" action="{% url 'chat' %}">
-            {% csrf_token %}
-            <input id="conversation-input" type="text" name="message" placeholder="Type your message here" autofocus>
-            <button type="submit">Submit</button>
-        </form>
+<div class="conversation-container">
+    <div class="conversation-history">
+        {% for message in conversation reversed %}
+          {% if message.user_input %}
+            <div class="message-container bot bot-message">
+              {% for line in message.bot_response.splitlines %}
+                <p>{{ line }}</p>
+              {% endfor %}
+            </div>
+            <div class="message-container user user-message">
+              <p>{{ message.user_input }}</p>
+            </div>
+          {% else %}
+            <div class="message-container bot">
+              <p>Failed to create message. reload and try again.</p>
+            </div>
+          {% endif %}
+        {% endfor %}
     </div>
+    <form id="conversation-form" method="post" action="{% url 'chat' %}">
+        {% csrf_token %}
+        <textarea id="conversation-input" name="message" placeholder="Type your message here" autofocus></textarea>
+        <button type="submit">Submit</button>
+    </form>
+</div>
 {% endblock %}
