@@ -20,6 +20,10 @@ def home(request):
 def submit_message(request):
     if request.method == 'POST':
         user_input = request.POST.get('message')
+        if not user_input:
+            conversation = request.session.get('conversation', [])
+            request.session['conversation'] = conversation
+            return render(request, 'chat/conversation.html', {'conversation': conversation})
         conversation_id = request.session.get('conversation_id')
         openai.api_key = os.environ.get("OPENAI_API_KEY")
         try:
