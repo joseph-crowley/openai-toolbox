@@ -128,3 +128,23 @@ STATICFILES_DIRS = [
 
 os.environ.setdefault("OPENAI_API_KEY","")
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': 'debug.log',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
+
