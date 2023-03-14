@@ -1,9 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.urls import reverse
 import json
 import os
 import openai
+from datetime import datetime
 
 def home(request):
     context = {
@@ -20,6 +21,7 @@ def home(request):
 def submit_message(request):
     if request.method == 'POST':
         user_input = request.POST['message']
+        if user_input == 'clear': return render(request, 'chat/conversation.html', {'conversation': []})
         openai.api_key = os.environ.get("OPENAI_API_KEY")
 
         # Get previous conversation
@@ -40,8 +42,30 @@ def submit_message(request):
         bot_response = response.choices[0].message["content"]
         conversation.append({"user_input": user_input, "bot_response": bot_response})
         request.session['conversation'] = conversation
+
+        # Save conversation to json file
+        timestamp = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+        with open(f'conversations/conversation_{timestamp}.json', 'w') as outfile:
+            json.dump(conversation, outfile)
+
         return render(request, 'chat/conversation.html', {'conversation': conversation})
     else:
         conversation = request.session.get('conversation', [])
         return render(request, 'chat/conversation.html', {'conversation': conversation})
+
+def select_conversation(request):
+    if request.method == 'POST':
+        conversation_file = request.POST['conversation_file']
+
+        try:
+            with open(f'conversations/{conversation_file}', 'r') as infile:
+                conversation = json.load(infile)
+                request.session['conversation'] = conversation
+                return render(request, 'chat/conversation.html', {'conversation': conversation})
+        except FileNotFoundError:
+            return render(request, 'chat/select_conversation.html', {'error_message': 'File not found. Please try again.'})
+
+    else:
+        conversation_files = os.listdir('conversations')
+        return render(request, 'chat/select_conversation.html', {'conversation_files': conversation_files})
 

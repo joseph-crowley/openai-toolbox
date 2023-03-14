@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    .center-content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        min-height: 500px;
+    }
+
+    .conversation-selection {
+        width: 100%;
+        max-width: 400px;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .conversation-selection h2 {
+        margin-bottom: 20px;
+    }
+</style>
+
+<div class="center-content">
+    <div class="conversation-selection">
+        <h2>Select a Conversation</h2>
+        <form method="post" action="{% url 'select_conversation' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="conversation_file">Select a conversation file:</label>
+                <select class="form-control" id="conversation_file" name="conversation_file">
+                    {% for conversation_file in conversation_files %}
+                        <option value="{{ conversation_file }}">{{ conversation_file }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            {% if error_message %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error_message }}
+                </div>
+            {% endif %}
+            <button type="submit" class="btn btn-primary">Load Conversation</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
