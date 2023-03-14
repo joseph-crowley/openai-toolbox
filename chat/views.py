@@ -22,22 +22,26 @@ def submit_message(request):
         user_input = request.POST['message']
         openai.api_key = os.environ.get("OPENAI_API_KEY")
 
-        # generate text
-        response = openai.Completion.create(
-            engine="text-davinci-003",
-            prompt=user_input,
-            max_tokens=3600,
-            n = 1,
-            stop=None,
-            temperature=0.5,
-        )
-        bot_response = ''.join(response["choices"][0]["text"])
+        # Get previous conversation
         conversation = request.session.get('conversation', [])
+
+        # Convert conversation to messages format
+        messages = [{"role": "system", "content": "You are an AI trained to help users with their questions."}]
+        for message in conversation:
+            messages.append({"role": "user", "content": message["user_input"]})
+            messages.append({"role": "assistant", "content": message["bot_response"]})
+        messages.append({"role": "user", "content": user_input})
+
+        # generate text
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=messages
+        )
+        bot_response = response.choices[0].message["content"]
         conversation.append({"user_input": user_input, "bot_response": bot_response})
         request.session['conversation'] = conversation
         return render(request, 'chat/conversation.html', {'conversation': conversation})
     else:
         conversation = request.session.get('conversation', [])
         return render(request, 'chat/conversation.html', {'conversation': conversation})
-
 
