@@ -24,6 +24,14 @@
     font-size: 1.2rem;
 }
 
+.system-message {
+  max-width: 70%;
+  background-color: #0077C9;
+  color: #fff;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .user-message {
     max-width: 45%;
     background-color: #2f3136;

@@ -5,7 +5,11 @@
     <div class="conversation-container">
         <div class="conversation-history">
             {% for message in messages reversed %}
-                {% if message.role == "user" %}
+                {% if message.role == "system" %}
+                    <div class="message-container system system-message">
+                        <p>{{ message.content|linebreaksbr }}</p>
+                    </div>
+                {% elif message.role == "user" %}
                     <div class="message-container user user-message">
                         <p>{{ message.content|linebreaksbr }}</p>
                     </div>
