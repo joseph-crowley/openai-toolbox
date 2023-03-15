@@ -22,7 +22,7 @@
         </div>
         <form id="conversation-form" method="post" action="{% url 'chat' %}">
             {% csrf_token %}
-            <input id="conversation-input" type="text" name="message" placeholder="Type your message here" autofocus>
+            <input id="conversation-input" type="text" name="message" placeholder="Type your message here, or 'clear' for a new conversation" autofocus>
             <button type="submit">Submit</button>
         </form>
 

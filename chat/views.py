@@ -82,17 +82,26 @@ def select_conversation(request):
     if request.method == 'POST':
         conversation_file = request.POST['conversation_file']
 
+        # if the file has a date in the name, load it from saved_conversations
+        if '2023' in conversation_file:
+            conversation_dir = 'saved_conversations'
+        else:
+            conversation_dir = 'conversations'
+
         try:
-            with open(f'conversations/{conversation_file}', 'r') as infile:
+            with open(f'{conversation_dir}/{conversation_file}', 'r') as infile:
                 conversation = json.load(infile)
                 request.session['messages'] = conversation
                 return render(request, 'chat/conversation.html', {'messages': conversation})
         except FileNotFoundError:
-            return render(request, 'chat/select_conversation.html', {'error_message': 'File not found. Please try again.'})
+            conversation_files = os.listdir('conversations')
+            saved_files = os.listdir('saved_conversations')
+            return render(request, 'chat/select_conversation.html', {'error_message': 'File not found. Please try again.', 'conversation_files': conversation_files, 'saved_conversations': saved_files})
 
     else:
         conversation_files = os.listdir('conversations')
-        return render(request, 'chat/select_conversation.html', {'conversation_files': conversation_files})
+        saved_files = os.listdir('saved_conversations')
+        return render(request, 'chat/select_conversation.html', {'conversation_files': conversation_files, 'saved_conversations': saved_files})
 
 def dalle(request):
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
