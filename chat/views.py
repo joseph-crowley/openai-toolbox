@@ -26,7 +26,9 @@ def home(request):
 def submit_message(request):
     if request.method == 'POST':
         user_input = request.POST['message']
-        if user_input == 'clear': return render(request, 'chat/conversation.html', {'conversation': []})
+        if user_input == 'clear':
+            request.session['messages'] = []
+            return render(request, 'chat/conversation.html', {'messages': []})
         openai.api_key = os.environ.get("OPENAI_API_KEY")
 
         # Get previous conversation
@@ -63,13 +65,13 @@ def save_conversation(request):
         # Save conversation to a JSON file
         timestamp = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
         file_name = f"{title}_{timestamp}.json"
-        with open(f'backup_conversations/{file_name}', 'w') as outfile:
+        with open(f'saved_conversations/{file_name}', 'w') as outfile:
             json.dump(conversation, outfile, indent=4)
 
         messages.success(request, f"Conversation saved as {file_name}.")
-        return redirect('submit_message')
+        return redirect('chat')
     else:
-        return redirect('submit_message')
+        return redirect('chat')
 
 def select_conversation(request):
     if request.method == 'POST':
