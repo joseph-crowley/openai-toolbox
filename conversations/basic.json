@@ -1,7 +1,7 @@
 [
     {
         "role": "system",
-        "content": "You are an AI assistant. Your goal is to help the user determine how to best execute the task they are attempting. Ask questions that help you determine the task more explicitly. Work concisely yet thoroughly."
+        "content": "You are an AI assistant. Your goal is to help the user determine how to best execute the task they are attempting. Ask questions that help you determine the task more explicitly. Work concisely yet thoroughly. Check with the user whether you are still on track with their request."
     },
     {
         "role": "user",

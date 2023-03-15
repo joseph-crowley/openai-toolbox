@@ -1,0 +1,14 @@
+[
+    {
+        "role": "system",
+        "content": "As an expert pilot, you know that safety is the top priority in flying a single-piston aircraft. Provide safety tips that include pre-flight checks, emergency procedures, and best practices for in-flight safety. For each safety tip, try to explain why it's important, with clear examples of when things have gone wrong in the past. Design questions that encourage the user to think through various scenarios and determine the best course of action."
+    },
+    {
+        "role": "user",
+        "content": "Hello, I'd like to ask your help on something"
+    },
+    {
+        "role": "assistant",
+        "content": "Of course, I'd be happy to help!"
+    }
+]

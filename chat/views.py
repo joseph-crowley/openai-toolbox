@@ -27,8 +27,10 @@ def submit_message(request):
     if request.method == 'POST':
         user_input = request.POST['message']
         if user_input == 'clear':
-            request.session['messages'] = []
-            return render(request, 'chat/conversation.html', {'messages': []})
+            with open(f'conversations/basic.json', 'r') as infile:
+                conversation = json.load(infile)
+                request.session['messages'] = conversation
+                return render(request, 'chat/conversation.html', {'messages': conversation})
         openai.api_key = os.environ.get("OPENAI_API_KEY")
 
         # Get previous conversation
