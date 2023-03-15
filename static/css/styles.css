@@ -154,3 +154,96 @@ nav ul li a:hover {
     gap: 1rem;
 }
 
+.home-container {
+    text-align: center;
+    padding: 2rem;
+}
+
+.home-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.home-subtitle {
+    font-size: 1.25rem;
+    color: #666;
+    margin-bottom: 2rem;
+}
+
+.features-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.feature-card {
+    width: 300px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    border-radius: 5px;
+    overflow: hidden;
+    transition: transform 0.3s;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+}
+
+.feature-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+}
+
+.feature-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.feature-caption {
+    font-size: 1.1rem;
+    font-weight: bold;
+    padding: 1rem;
+}
+
+/* Add these new styles after the existing styles */
+
+.marketing-container {
+    margin-bottom: 2rem;
+}
+
+.marketing-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.marketing-features {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.marketing-features li {
+    font-size: 1.1rem;
+    font-weight: bold;
+    background-color: #1c1c1c;
+    border: 1px solid #e9ecef;
+    border-radius: 5px;
+    padding: 0.5rem 1rem;
+}
+
+.marketing-text {
+    font-size: 1rem;
+    color: #666;
+    text-align: justify;
+    max-width: 800px;
+    margin: 0 auto;
+}
+

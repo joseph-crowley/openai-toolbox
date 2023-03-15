@@ -2,14 +2,30 @@
 {% load static %}
 
 {% block content %}
-<div class="container mt-5">
-    <div class="row">
+<div class="home-container">
+    <h1 class="home-title">Welcome to OpenAI Toolbox</h1>
+    <p class="home-subtitle">Experience the power of cutting-edge AI technologies with our interactive and user-friendly web application.</p>
+
+    <div class="marketing-container">
+        <h2 class="marketing-title">Key Features:</h2>
+        <ul class="marketing-features">
+            <li>Engaging AI-Powered Conversations</li>
+            <li>Image Generation with DALL-E</li>
+            <li>Saved Conversations</li>
+            <li>Image Gallery</li>
+        </ul>
+        <p class="marketing-text">
+            OpenAI Toolbox offers a glimpse into the future of AI and its boundless possibilities. Uncover the extraordinary capabilities of LLMs and image generators as you interact with them in real-time. With a clean and intuitive interface, our web application makes it simple for users of all backgrounds to navigate and enjoy the groundbreaking features we offer.
+        </p>
+    </div>
+
+    <div class="features-container">
         {% for image in panel_images %}
-            <div class="col-4">
-                <a href="{{ image.url }}">
-                    <img src="{{ image.img }}" class="img-fluid">
+            <div class="feature-card">
+                <a href="{{ image.url }}" class="feature-link">
+                    <img src="{{ image.img }}" class="feature-image">
+                    <div class="feature-caption">{{ image.caption }}</div>
                 </a>
-                <div class="caption text-center mt-3">{{ image.caption }}</div>
             </div>
         {% endfor %}
     </div>
