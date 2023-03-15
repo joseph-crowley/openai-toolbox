@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.urls import reverse
 from django.contrib import messages
+from django.conf import settings
+from django.templatetags.static import static
 from openai_toolbox.dalle import generate_image
 
 import json
@@ -106,3 +108,14 @@ def dalle(request):
     else:
         return render(request, 'chat/dalle.html')
 
+
+def image_gallery(request):
+    image_folder = os.path.join(settings.BASE_DIR, 'static','assets','generated_images')
+    image_files = [f for f in os.listdir(image_folder) if os.path.isfile(os.path.join(image_folder, f))]
+    image_urls = [static(f"assets/generated_images/{img}") for img in image_files]
+
+    context = {
+        'image_data': zip(image_urls, image_files)
+    }
+
+    return render(request, 'chat/image_gallery.html', context)

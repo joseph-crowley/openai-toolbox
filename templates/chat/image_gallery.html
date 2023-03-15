@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}Image Gallery{% endblock %}
+
+{% block content %}
+    <div class="gallery-container">
+        <h1 class="gallery-title">High Art Gallery</h1>
+        <div class="gallery-grid">
+            {% for image_url, image_file in image_data %}
+                <div class="gallery-item">
+                    <img src="{{ image_url }}" alt="Generated image">
+                    <div class="gallery-item-title">Title: {{ image_file|cut:".png"|cut:".jpg"|cut:".jpeg"|cut:".gif" }}</div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
