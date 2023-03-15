@@ -1,12 +1,12 @@
 # openai-toolbox
 
-This is a simple Django app that serves a home page with photos and a chat endpoint that uses the OpenAI API to call the Davinci-003 model.
+This is a simple Django app that serves a home page with photos and a chat endpoint that uses the OpenAI API to call a Chat Completions model.
 Installation
 
 ### Clone the repository and navigate to the project directory.
 
     git clone https://github.com/joseph-crowley/openai-toolbox.git
-    cd django-photo-chat-app
+    cd openai-toolbox
 
 ### Create a new conda environment and activate it.
 
@@ -20,6 +20,9 @@ Installation
     # add your key
     vim .env 
 
+### Create directories to store conversations
+    mkdir backup_conversations saved_conversations
+
 ### Run migrations and start the development server.
 
     python manage.py makemigrations
@@ -29,4 +32,10 @@ Installation
 ## Usage
 
     Visit http://localhost:8000 to view the home page with photos.
-    Visit http://localhost:8000/chat to use the chat endpoint and interact with the Davinci-003 model.
+    Visit http://localhost:8000/chat to use the chat endpoint and interact with the model.
+    Visit http://localhost:8000/select_conversation to choose a preset.
+
+
+    Type "clear" and hit "Submit" to clear the current conversation and start with a basic prompt
+    Scroll down and provide a filename to save the conversation to saved_conversations/
+
