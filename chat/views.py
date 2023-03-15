@@ -1,10 +1,13 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.urls import reverse
+from django.contrib import messages
+
 import json
 import os
-import openai
 from datetime import datetime
+
+import openai
 
 def home(request):
     context = {
@@ -18,6 +21,8 @@ def home(request):
 
     return render(request, 'home.html', context)
 
+
+
 def submit_message(request):
     if request.method == 'POST':
         user_input = request.POST['message']
@@ -25,33 +30,46 @@ def submit_message(request):
         openai.api_key = os.environ.get("OPENAI_API_KEY")
 
         # Get previous conversation
-        conversation = request.session.get('conversation', [])
+        conversation = request.session.get('messages', [])
 
-        # Convert conversation to messages format
-        messages = [{"role": "system", "content": "You are an AI trained to help users with their questions."}]
-        for message in conversation:
-            messages.append({"role": "user", "content": message["user_input"]})
-            messages.append({"role": "assistant", "content": message["bot_response"]})
-        messages.append({"role": "user", "content": user_input})
+        # add the new message
+        if user_input:
+            conversation.append({"role": "user", "content": user_input})
 
         # generate text
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
-            messages=messages
+            messages=conversation
         )
         bot_response = response.choices[0].message["content"]
-        conversation.append({"user_input": user_input, "bot_response": bot_response})
-        request.session['conversation'] = conversation
+        conversation.append({"role": "assistant", "content": bot_response})
+        request.session['messages'] = conversation
 
         # Save conversation to json file
         timestamp = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
-        with open(f'conversations/conversation_{timestamp}.json', 'w') as outfile:
-            json.dump(conversation, outfile)
+        with open(f'backup_conversations/conversation_{timestamp}.json', 'w') as outfile:
+            json.dump(conversation, outfile, indent=4)
 
-        return render(request, 'chat/conversation.html', {'conversation': conversation})
+        return render(request, 'chat/conversation.html', {'messages': conversation})
     else:
-        conversation = request.session.get('conversation', [])
-        return render(request, 'chat/conversation.html', {'conversation': conversation})
+        conversation = request.session.get('messages', [])
+        return render(request, 'chat/conversation.html', {'messages': conversation})
+
+def save_conversation(request):
+    if request.method == 'POST':
+        title = request.POST['title']
+        conversation = request.session.get('messages', [])
+
+        # Save conversation to a JSON file
+        timestamp = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+        file_name = f"{title}_{timestamp}.json"
+        with open(f'backup_conversations/{file_name}', 'w') as outfile:
+            json.dump(conversation, outfile, indent=4)
+
+        messages.success(request, f"Conversation saved as {file_name}.")
+        return redirect('submit_message')
+    else:
+        return redirect('submit_message')
 
 def select_conversation(request):
     if request.method == 'POST':
@@ -60,8 +78,8 @@ def select_conversation(request):
         try:
             with open(f'conversations/{conversation_file}', 'r') as infile:
                 conversation = json.load(infile)
-                request.session['conversation'] = conversation
-                return render(request, 'chat/conversation.html', {'conversation': conversation})
+                request.session['messages'] = conversation
+                return render(request, 'chat/conversation.html', {'messages': conversation})
         except FileNotFoundError:
             return render(request, 'chat/select_conversation.html', {'error_message': 'File not found. Please try again.'})
 

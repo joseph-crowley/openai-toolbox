@@ -4,19 +4,16 @@
 {% block content %}
     <div class="conversation-container">
         <div class="conversation-history">
-            {% for message in conversation reversed %}
-              {% if message.user_input %}
-                <div class="message-container bot bot-message">
-                  <p>{{ message.bot_response }}</p>
-                </div>
-                <div class="message-container user user-message">
-                  <p>{{ message.user_input }}</p>
-                </div>
-              {% else %}
-                <div class="message-container bot">
-                  <p>Failed to create message. reload and try again.</p>
-                </div>
-              {% endif %}
+            {% for message in messages reversed %}
+                {% if message.role == "user" %}
+                    <div class="message-container user user-message">
+                        <p>{{ message.content }}</p>
+                    </div>
+                {% elif message.role == "assistant" %}
+                    <div class="message-container bot bot-message">
+                        <p>{{ message.content }}</p>
+                    </div>
+                {% endif %}
             {% endfor %}
         </div>
         <form id="conversation-form" method="post" action="{% url 'chat' %}">
@@ -24,5 +21,43 @@
             <input id="conversation-input" type="text" name="message" placeholder="Type your message here" autofocus>
             <button type="submit">Submit</button>
         </form>
+        <button id="save-conversation-button" type="button">Save Conversation</button>
+    </div>
+
+    <!-- Save conversation modal -->
+    <div id="save-conversation-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <form id="save-conversation-form" method="post" action="{% url 'save_conversation' %}">
+                {% csrf_token %}
+                <label for="conversation-title">Title:</label>
+                <input id="conversation-title" type="text" name="title" placeholder="Enter conversation title" required>
+                <button type="submit">Save</button>
+            </form>
+        </div>
     </div>
 {% endblock %}
+
+{% block extra_js %}
+    <script>
+        // Save conversation modal functionality
+        let saveConversationButton = document.getElementById("save-conversation-button");
+        let saveConversationModal = document.getElementById("save-conversation-modal");
+        let closeModal = document.getElementsByClassName("close")[0];
+
+        saveConversationButton.onclick = function() {
+            saveConversationModal.style.display = "block";
+        }
+
+        closeModal.onclick = function() {
+            saveConversationModal.style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            if (event.target == saveConversationModal) {
+                saveConversationModal.style.display = "none";
+            }
+        }
+    </script>
+{% endblock %}
+
