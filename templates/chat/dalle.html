@@ -4,16 +4,18 @@
 {% block title %}DALL-E{% endblock %}
 
 {% block content %}
-    <h1>DALL-E Image Generator</h1>
-    <p>Enter a prompt to generate an image using DALL-E:</p>
+    <div class="dalle-container">
+        <h1 class="dalle-title">DALL-E Image Generator</h1>
+        <p>Enter a prompt to generate an image using DALL-E:</p>
 
-    <form id="dalle-form">
-        <input type="text" id="prompt" name="prompt" placeholder="Enter your prompt" required>
-        <button type="submit">Generate Image</button>
-    </form>
+        <form id="dalle-form">
+            <input type="text" id="prompt" name="prompt" placeholder="Enter your prompt" required>
+            <button type="submit">Generate Image</button>
+        </form>
 
-    <div id="image-container">
-        <!-- Image will be displayed here -->
+        <div id="image-container">
+            <!-- Image and prompt will be displayed here -->
+        </div>
     </div>
 
     <script>
@@ -42,14 +44,16 @@
                     img.alt = prompt;
                     img.style.maxWidth = "100%";
 
+                    const promptDisplay = document.createElement("p");
+                    promptDisplay.innerText = `Prompt: ${prompt}`;
+
                     imageContainer.innerHTML = "";
                     imageContainer.appendChild(img);
+                    imageContainer.appendChild(promptDisplay);
                 }
             } catch (err) {
                 alert(`Error: ${err.message}`);
             }
         });
     </script>
-
 {% endblock %}
-

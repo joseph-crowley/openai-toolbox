@@ -108,4 +108,49 @@ nav ul li a:hover {
     color: white;
     text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
 }
+.dalle-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem 15px;
+    text-align: center;
+}
+
+.dalle-title {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+#dalle-form {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+}
+
+#dalle-form input {
+    flex: 1;
+    margin-right: 1rem;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+#dalle-form button {
+    padding: 0.5rem 1rem;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#dalle-form button:hover {
+    background-color: #0056B3;
+}
+
+#image-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
 
