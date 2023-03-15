@@ -32,7 +32,7 @@
             <div class="form-group">
                 <label for="conversation_file">Select a conversation file:</label>
                 <select class="form-control" id="conversation_file" name="conversation_file">
-                    {% for conversation_file in conversation_files %}
+                    {% for conversation_file in conversation_files reversed %}
                         <option value="{{ conversation_file }}">{{ conversation_file }}</option>
                     {% endfor %}
                 </select>
