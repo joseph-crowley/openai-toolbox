@@ -20,8 +20,9 @@ Installation
     # add your key
     vim .env 
 
-### Create directories to store conversations
+### Create directories for use in the app
     mkdir backup_conversations saved_conversations
+    mkdir -p static/assets/generated_images
 
 ### Run migrations and start the development server.
 
