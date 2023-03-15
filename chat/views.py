@@ -24,8 +24,6 @@ def home(request):
 
     return render(request, 'home.html', context)
 
-
-
 def submit_message(request):
     if request.method == 'POST':
         user_input = request.POST['message']
@@ -43,10 +41,32 @@ def submit_message(request):
         if user_input:
             conversation.append({"role": "user", "content": user_input})
 
+        # Get optional parameters from the request
+        temperature = float(request.POST.get('temperature', 1))
+        top_p = float(request.POST.get('top_p', 1))
+        n = int(request.POST.get('n', 1))
+        stream = request.POST.get('stream', 'false').lower() == 'true'
+        stop = request.POST.get('stop', None)
+        max_tokens = int(request.POST.get('max_tokens', 0)) or None
+        presence_penalty = float(request.POST.get('presence_penalty', 0))
+        frequency_penalty = float(request.POST.get('frequency_penalty', 0))
+        logit_bias = json.loads(request.POST.get('logit_bias', "{}"))
+        user_id = request.POST.get('user', '')
+
         # generate text
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
-            messages=conversation
+            messages=conversation,
+            temperature=temperature,
+            top_p=top_p,
+            n=n,
+            stream=stream,
+            stop=stop,
+            max_tokens=max_tokens,
+            presence_penalty=presence_penalty,
+            frequency_penalty=frequency_penalty,
+            logit_bias=logit_bias,
+            user=user_id,
         )
         bot_response = response.choices[0].message["content"]
         conversation.append({"role": "assistant", "content": bot_response})
@@ -61,6 +81,7 @@ def submit_message(request):
     else:
         conversation = request.session.get('messages', [])
         return render(request, 'chat/conversation.html', {'messages': conversation})
+
 
 def save_conversation(request):
     if request.method == 'POST':
