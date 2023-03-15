@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% block title %}DALL-E{% endblock %}
+
+{% block content %}
+    <h1>DALL-E Image Generator</h1>
+    <p>Enter a prompt to generate an image using DALL-E:</p>
+
+    <form id="dalle-form">
+        <input type="text" id="prompt" name="prompt" placeholder="Enter your prompt" required>
+        <button type="submit">Generate Image</button>
+    </form>
+
+    <div id="image-container">
+        <!-- Image will be displayed here -->
+    </div>
+
+    <script>
+        const form = document.getElementById("dalle-form");
+        const imageContainer = document.getElementById("image-container");
+
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const prompt = document.getElementById("prompt").value;
+            if (!prompt) return;
+
+            try {
+                const response = await fetch(`/dalle/?prompt=${encodeURIComponent(prompt)}`, {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                });
+                const data = await response.json();
+
+                if (data.error) {
+                    alert(`Error: ${data.error}`);
+                } else {
+                    const img = document.createElement("img");
+                    img.src = `{% static '' %}` + data.image_path;
+                    img.alt = prompt;
+                    img.style.maxWidth = "100%";
+
+                    imageContainer.innerHTML = "";
+                    imageContainer.appendChild(img);
+                }
+            } catch (err) {
+                alert(`Error: ${err.message}`);
+            }
+        });
+    </script>
+
+{% endblock %}
+

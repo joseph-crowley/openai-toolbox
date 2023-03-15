@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.urls import reverse
 from django.contrib import messages
+from openai_toolbox.dalle import generate_image
 
 import json
 import os
@@ -90,4 +91,18 @@ def select_conversation(request):
     else:
         conversation_files = os.listdir('conversations')
         return render(request, 'chat/select_conversation.html', {'conversation_files': conversation_files})
+
+def dalle(request):
+    if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
+        prompt = request.GET.get("prompt", "")
+        if not prompt:
+            return JsonResponse({"error": "Prompt is required."}, status=400, content_type="application/json")
+
+        try:
+            image_path = generate_image(prompt)
+            return JsonResponse({"image_path": image_path}, content_type="application/json")
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500, content_type="application/json")
+    else:
+        return render(request, 'chat/dalle.html')
 
