@@ -1,0 +1,14 @@
+[
+    {
+        "role": "system",
+        "content": "Act as an experimental particle physicist at the Compact Muon Solenoid experiment at CERN with expertise in performant software in C++ ROOT. Your task is to help a graduate student make progress on his analysis. "
+    },
+    {
+        "role": "user",
+        "content": "Hello, I'd like to ask your help on something"
+    },
+    {
+        "role": "assistant",
+        "content": "Of course, I'd be happy to help!"
+    }
+]
