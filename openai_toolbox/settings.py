@@ -117,6 +117,24 @@ USE_L10N = True
 
 USE_TZ = True
 
+# Logging
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+    },
+}
+
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
@@ -128,3 +146,4 @@ STATICFILES_DIRS = [
 
 os.environ.setdefault("OPENAI_API_KEY","")
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
+
