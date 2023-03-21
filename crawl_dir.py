@@ -40,8 +40,8 @@ def generate_docstring(code, ncalls = 0):
         print(fail_str)
         if ncalls < 10:
             print(f'sleeping for {n*5} seconds and trying again')
-            time.sleep(n*5)
-            return generate_docstring(code, ncalls + 1):
+            time.sleep(ncalls*5)
+            return generate_docstring(code, ncalls + 1)
         else:
             print("Failed 10 times... returning empty str")
             return ''
