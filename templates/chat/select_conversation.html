@@ -1,107 +1,37 @@
 {% extends 'base.html' %}
-{% load static %}
-
+{% block title %}Load Conversation{% endblock %}
 {% block content %}
-<style>
-    .center-content {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        min-height: 500px;
-    }
-
-    .conversation-selection {
-        width: 100%;
-        max-width: 800px;
-        padding: 20px;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 20px;
-        justify-content: center;
-    }
-
-    .conversation-selection h2 {
-        width: 100%;
-        text-align: center;
-        margin-bottom: 20px;
-    }
-
-    .conversation-card {
-        width: calc(33.333% - 20px);
-        padding: 20px;
-        border: 1px solid #e9ecef;
-        border-radius: 10px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        cursor: pointer;
-        text-align: center;
-        transition: background-color 0.3s;
-    }
-
-    .conversation-card.selected,
-    .conversation-card:hover {
-        background-color: #0077C9;
-        color: #fff;
-    }
-
-    .load-conversation-btn {
-        background-color: #0077C9;
-        border: none;
-        color: white;
-        padding: 8px 16px;
-        font-size: 16px;
-        border-radius: 4px;
-        cursor: pointer;
-        transition: background-color 0.3s;
-    }
-
-    .load-conversation-btn:hover {
-        background-color: #005ea6;
-    }
-</style>
-
 <div class="center-content">
-    <form method="post" action="{% url 'select_conversation' %}">
-        {% csrf_token %}
-        <div class="conversation-selection">
-            <h2>Select a Conversation</h2>
-            {% for conversation_file in conversation_files reversed %}
-                <div class="conversation-card" onclick="selectConversation(this, '{{ conversation_file }}')">
-                    {{ conversation_file|cut:".json" }}
-                </div>
-            {% endfor %}
-            <h2>Saved Conversations</h2>
-            {% for saved_conversation in saved_conversations reversed %}
-                <div class="conversation-card" onclick="selectConversation(this, '{{ saved_conversation }}')">
-                    {{ saved_conversation|cut:".json" }}
-                </div>
-            {% endfor %}
-            <input type="hidden" id="selected_conversation_file" name="conversation_file">
-        </div>
+    <section class="conversation-selection">
         {% if error_message %}
-            <div class="alert alert-danger" role="alert">
-                {{ error_message }}
-            </div>
+            <p class="error">{{ error_message }}</p>
         {% endif %}
-        <div class="text-center">
-            <button type="submit" class="load-conversation-btn">Load Conversation</button>
-        </div>
-    </form>
-</div>
-
-<script>
-    let selectedCard = null;
-
-    function selectConversation(conversationCard, conversation_file) {
-        if (selectedCard) {
-            selectedCard.classList.remove('selected');
-        }
-
-        conversationCard.classList.add('selected');
-        selectedCard = conversationCard;
-
-        document.getElementById("selected_conversation_file").value = conversation_file;
-    }
-</script>
+        <form method="post" action="{% url 'select_conversation' %}">
+            {% csrf_token %}
+            <div class="conversation-selection">
+                <h2>Select a Conversation</h2>
+                {% for conversation_file in conversation_files reversed %}
+                    <div class="conversation-card" onclick="selectConversation(this, '{{ conversation_file }}')">
+                        {{ conversation_file|cut:".json" }}
+                    </div>
+                {% endfor %}
+                <h2>Saved Conversations</h2>
+                {% for saved_conversation in saved_conversations reversed %}
+                    <div class="conversation-card" onclick="selectConversation(this, '{{ saved_conversation }}')">
+                        {{ saved_conversation|cut:".json" }}
+                    </div>
+                {% endfor %}
+                <input type="hidden" id="selected_conversation_file" name="conversation_file">
+            </div>
+            {% if error_message %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error_message }}
+                </div>
+            {% endif %}
+            <div class="text-center">
+                <button type="submit" class="load-conversation-btn">Load Conversation</button>
+            </div>
+        </form>
+    </section>
 {% endblock %}
 

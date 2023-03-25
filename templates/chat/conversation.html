@@ -1,103 +1,25 @@
 <!DOCTYPE html>
 {% extends 'base.html' %}
-{% load static %}
+{% block title %}Chat{% endblock %}
 {% block content %}
-    <div class="conversation-container">
-        <div class="conversation-history">
-            {% for message in messages reversed %}
-                {% if message.role == "system" %}
-                    <div class="message-container system system-message">
-                        <p>{{ message.content|linebreaksbr }}</p>
-                    </div>
-                {% elif message.role == "user" %}
-                    <div class="message-container user user-message">
-                        <p>{{ message.content|linebreaksbr }}</p>
-                    </div>
-                {% elif message.role == "assistant" %}
-                    <div class="message-container bot bot-message">
-                        <p>{{ message.content|linebreaksbr }}</p>
-                    </div>
-                {% endif %}
+    <section class="chat-container">
+        <div class="conversation">
+            {% for message in messages %}
+                <div class="message {% if message.role == 'user' %}user{% else %}assistant{% endif %}">
+                    <p>{{ message.content }}</p>
+                </div>
             {% endfor %}
         </div>
-        <form id="conversation-form" method="post" action="{% url 'chat' %}">
+        <form method="POST" action="{% url 'chat' %}">
             {% csrf_token %}
-            <input id="conversation-input" type="text" name="message" placeholder="Type your message here, or 'clear' for a new conversation" autofocus>
-            <button type="submit">Submit</button>
+            <input type="text" name="message" placeholder="Type your message...">
+            <button type="submit">Send</button>
         </form>
-    </div>
-
-    <!-- Save conversation modal -->
-    <div id="save-conversation-modal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <form id="save-conversation-form" method="post" action="{% url 'save_conversation' %}">
-                {% csrf_token %}
-                <label for="conversation-title">Title:</label>
-                <input id="conversation-title" type="text" name="title" placeholder="Enter conversation title" required>
-                <button type="submit">Save</button>
-            </form>
-        </div>
-    </div>
-    <div id="settings-modal" class="modal">
-        <div class="modal-content">
-            <span class="settings-close">&times;</span>
-            <h2>Settings</h2>
-
-            <!-- Optional parameters selectors -->
-            <label for="temperature">Temperature:</label>
-            <input id="temperature" type="number" name="temperature" value="1" min="0" max="2" step="0.01">
-
-            <label for="top_p">Top P:</label>
-            <input id="top_p" type="number" name="top_p" value="1" min="0" max="1" step="0.01">
-
-            <label for="n">N:</label>
-            <input id="n" type="number" name="n" value="1" min="1">
-
-            <label for="stream">Stream:</label>
-            <input id="stream" type="checkbox" name="stream" value="true">
-
-            <label for="stop">Stop:</label>
-            <input id="stop" type="text" name="stop" placeholder="Enter stop sequences">
-
-            <label for="max_tokens">Max Tokens:</label>
-            <input id="max_tokens" type="number" name="max_tokens" value="" placeholder="Enter max tokens" min="1">
-
-            <label for="presence_penalty">Presence Penalty:</label>
-            <input id="presence_penalty" type="number" name="presence_penalty" value="0" min="-2" max="2" step="0.01">
-
-            <label for="frequency_penalty">Frequency Penalty:</label>
-            <input id="frequency_penalty" type="number" name="frequency_penalty" value="0" min="-2" max="2" step="0.01">
-
-            <label for="logit_bias">Logit Bias:</label>
-            <input id="logit_bias" type="text" name="logit_bias" value="{}" placeholder="Enter logit bias in JSON format">
-
-            <label for="user">User:</label>
-            <input id="user" type="text" name="user" placeholder="Enter user ID">
-        </div>
-    </div>
-{% endblock %}
-
-{% block extra_js %}
-    <script>
-        // Save conversation modal functionality
-        let saveConversationButton = document.getElementById("save-conversation-button");
-        let saveConversationModal = document.getElementById("save-conversation-modal");
-        let closeModal = document.getElementsByClassName("close")[0];
-
-        saveConversationButton.onclick = function() {
-            saveConversationModal.style.display = "block";
-        }
-
-        closeModal.onclick = function() {
-            saveConversationModal.style.display = "none";
-        }
-
-        window.onclick = function(event) {
-            if (event.target == saveConversationModal) {
-                saveConversationModal.style.display = "none";
-            }
-        }
-    </script>
+        <form method="POST" action="{% url 'save_conversation' %}">
+            {% csrf_token %}
+            <input type="text" name="title" placeholder="Conversation title">
+            <button type="submit">Save Conversation</button>
+        </form>
+    </section>
 {% endblock %}
 
