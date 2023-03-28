@@ -58,8 +58,7 @@ nav ul li a:hover {
 
 .conversation {
     width: 100%;
-    max-width: 800px;
-    background-color: #f0f0f0;
+    background-color: #333;
     border-radius: 5px;
     padding: 1rem;
     margin-bottom: 1rem;
@@ -73,15 +72,28 @@ nav ul li a:hover {
     border-radius: 5px;
 }
 
-.user {
-    background-color: #4caf50;
-    color: white;
+.system {
+    max-width: 70%;
+    background-color: #32cd59;
+    color: #fff;
+    margin-left: auto;
+    margin-right: auto;
     align-self: flex-end;
 }
 
+.user {
+    max-width: 45%;
+    background-color: #1587ff;
+    color: #fff;
+    margin-left: auto;
+}
+
 .assistant {
-    background-color: #e0e0e0;
-    color: #333;
+    max-width: 45%;
+    text-align: left;
+    background-color: #d9d9d9;
+    color: #000;
+    margin-right: auto;
 }
 
 form {
@@ -89,7 +101,6 @@ form {
     flex-direction: column;
     gap: 0.5rem;
     width: 100%;
-    max-width: 800px;
 }
 
 input, button {
@@ -176,12 +187,12 @@ button:hover {
 
 .conversation-card.selected,
 .conversation-card:hover {
-    background-color: #0077C9;
+    background-color: #32cd59;
     color: #fff;
 }
 
 .load-conversation-btn {
-    background-color: #0077C9;
+    background-color: #32cd59;
     border: none;
     color: white;
     padding: 8px 16px;
@@ -462,7 +473,7 @@ nav ul li a:hover {
 
 .system-message {
   max-width: 70%;
-  background-color: #0077C9;
+  background-color: #32cd59;
   color: #fff;
   margin-left: auto;
   margin-right: auto;
@@ -477,7 +488,6 @@ nav ul li a:hover {
 
 .bot-message {
     max-width: 45%;
-    text-align: left;
     background-color: #d9d9d9;
     color: #000;
     margin-right: auto;
@@ -501,7 +511,7 @@ nav ul li a:hover {
 }
 
 #conversation-form button {
-    background-color: #0077C9;
+    background-color: #007BFF;
     color: #fff;
     border: none;
     padding: 10px 20px;

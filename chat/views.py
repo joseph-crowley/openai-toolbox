@@ -2,9 +2,9 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.urls import reverse
 from django.contrib import messages
-from django.conf import settings
 from django.templatetags.static import static
 from openai_toolbox.dalle import generate_image
+from django.conf import settings
 
 import json
 import os
@@ -55,7 +55,7 @@ def submit_message(request):
 
         # generate text
         response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
+            model=settings.GPT_MODEL,
             messages=conversation,
             temperature=temperature,
             top_p=top_p,

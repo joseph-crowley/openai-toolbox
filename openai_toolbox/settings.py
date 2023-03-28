@@ -147,3 +147,5 @@ STATICFILES_DIRS = [
 os.environ.setdefault("OPENAI_API_KEY","")
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
 
+GPT_MODEL = "gpt-3.5-turbo"
+#GPT_MODEL = "gpt-4"

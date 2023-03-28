@@ -33,5 +33,20 @@
             </div>
         </form>
     </section>
+
+<script>
+    let selectedCard = null;
+
+    function selectConversation(conversationCard, conversation_file) {
+        if (selectedCard) {
+            selectedCard.classList.remove('selected');
+        }
+
+        conversationCard.classList.add('selected');
+        selectedCard = conversationCard;
+
+        document.getElementById("selected_conversation_file").value = conversation_file;
+    }
+</script>
 {% endblock %}
 
