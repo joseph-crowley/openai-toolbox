@@ -4,13 +4,12 @@ from django.urls import reverse
 from django.contrib import messages
 from django.templatetags.static import static
 from openai_toolbox.dalle import generate_image
+from openai_toolbox.chatGPT import generate_message
 from django.conf import settings
 
 import json
 import os
 from datetime import datetime
-
-import openai
 
 def home(request):
     context = {
@@ -32,7 +31,6 @@ def submit_message(request):
                 conversation = json.load(infile)
                 request.session['messages'] = conversation
                 return render(request, 'chat/conversation.html', {'messages': conversation})
-        openai.api_key = os.environ.get("OPENAI_API_KEY")
 
         # Get previous conversation
         conversation = request.session.get('messages', [])
@@ -53,23 +51,23 @@ def submit_message(request):
         logit_bias = json.loads(request.POST.get('logit_bias', "{}"))
         user_id = request.POST.get('user', '')
 
+        # form the kwargs for the request
+        kwargs = {
+            'temperature': temperature,
+            'top_p': top_p,
+            'n': n,
+            'stream': stream,
+            'stop': stop,
+            'max_tokens': max_tokens,
+            'presence_penalty': presence_penalty,
+            'frequency_penalty': frequency_penalty,
+            'logit_bias': logit_bias,
+            'user': user_id,
+        }
+
         # generate text
-        response = openai.ChatCompletion.create(
-            model=settings.GPT_MODEL,
-            messages=conversation,
-            temperature=temperature,
-            top_p=top_p,
-            n=n,
-            stream=stream,
-            stop=stop,
-            max_tokens=max_tokens,
-            presence_penalty=presence_penalty,
-            frequency_penalty=frequency_penalty,
-            logit_bias=logit_bias,
-            user=user_id,
-        )
-        bot_response = response.choices[0].message["content"]
-        conversation.append({"role": "assistant", "content": bot_response})
+        response = generate_message(conversation, **kwargs) 
+        conversation.append({"role": "assistant", "content": response})
         request.session['messages'] = conversation
 
         # Save conversation to json file
@@ -90,7 +88,6 @@ def chatter(request):
                 conversation = json.load(infile)
                 request.session['messages'] = conversation
                 return render(request, 'chat/chatter.html', {'messages': conversation})
-        openai.api_key = os.environ.get("OPENAI_API_KEY")
 
         # Get previous conversation
         conversation = request.session.get('messages', [])
@@ -99,12 +96,8 @@ def chatter(request):
         if user_input:
             conversation.append({"role": "user", "content": user_input})
                         
-            response = openai.ChatCompletion.create(
-                model=settings.GPT_MODEL,
-                messages=conversation,
-            )
-            bot_response = response.choices[0].message["content"]
-            conversation.append({"role": 'assistant', "content": bot_response})
+            response = generate_message(conversation)
+            conversation.append({"role": 'assistant', "content": response})
 
             request.session['messages'] = conversation
 
@@ -133,13 +126,9 @@ def chatter(request):
                 role1 = 'assistant'
                 role2 = 'user'
             
-            response = openai.ChatCompletion.create(
-                model=settings.GPT_MODEL,
-                messages=conversation_side,
-            )
-            bot_response = response.choices[0].message["content"]
-            conversation.append({"role": role2, "content": bot_response})
-            inverted_conversation.append({"role": role1, "content": bot_response})
+            response = generate_message(conversation_side)
+            conversation.append({"role": role2, "content": response})
+            inverted_conversation.append({"role": role1, "content": response})
 
         request.session['messages'] = conversation
 
