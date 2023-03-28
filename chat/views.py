@@ -82,6 +82,76 @@ def submit_message(request):
         conversation = request.session.get('messages', [])
         return render(request, 'chat/conversation.html', {'messages': conversation})
 
+def chatter(request):
+    if request.method == 'POST':
+        user_input = request.POST['message']
+        if user_input == 'clear':
+            with open(f'conversations/chatter.json', 'r') as infile:
+                conversation = json.load(infile)
+                request.session['messages'] = conversation
+                return render(request, 'chat/chatter.html', {'messages': conversation})
+        openai.api_key = os.environ.get("OPENAI_API_KEY")
+
+        # Get previous conversation
+        conversation = request.session.get('messages', [])
+
+        # add the new message
+        if user_input:
+            conversation.append({"role": "user", "content": user_input})
+                        
+            response = openai.ChatCompletion.create(
+                model=settings.GPT_MODEL,
+                messages=conversation,
+            )
+            bot_response = response.choices[0].message["content"]
+            conversation.append({"role": 'assistant', "content": bot_response})
+
+            request.session['messages'] = conversation
+
+            # Save conversation to json file
+            timestamp = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+            with open(f'backup_conversations/conversation_{timestamp}.json', 'w') as outfile:
+                json.dump(conversation, outfile, indent=4)
+
+            return render(request, 'chat/chatter.html', {'messages': conversation})
+
+
+        # generate text
+        inversion = {'user': 'assistant', 'assistant': 'user', 'system':'system'}
+        inverted_conversation = []
+        for message in conversation:
+            inverted_conversation.append({"role": inversion[message['role']], "content": message['content']})
+        
+        for i in range(5):
+            if i == 0 and not user_input: continue
+            if i%2 == 0:
+                conversation_side = conversation
+                role1 = 'user'
+                role2 = 'assistant'
+            else:
+                conversation_side = inverted_conversation
+                role1 = 'assistant'
+                role2 = 'user'
+            
+            response = openai.ChatCompletion.create(
+                model=settings.GPT_MODEL,
+                messages=conversation_side,
+            )
+            bot_response = response.choices[0].message["content"]
+            conversation.append({"role": role2, "content": bot_response})
+            inverted_conversation.append({"role": role1, "content": bot_response})
+
+        request.session['messages'] = conversation
+
+        # Save conversation to json file
+        timestamp = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+        with open(f'backup_conversations/conversation_{timestamp}.json', 'w') as outfile:
+            json.dump(conversation, outfile, indent=4)
+
+        return render(request, 'chat/chatter.html', {'messages': conversation})
+    else:
+        conversation = request.session.get('messages', [])
+        return render(request, 'chat/chatter.html', {'messages': conversation})
 
 def save_conversation(request):
     if request.method == 'POST':

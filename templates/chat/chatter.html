@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+{% block title %}Chat{% endblock %}
+{% block content %}
+    <div class="conversation-container">
+        <div class="conversation-history">
+            {% for message in messages reversed %}
+                <div class="message {% if message.role == 'user' %}user{% elif message.role == 'system' %}system{% else %}assistant{% endif %}">
+                    <p>{{ message.content | linebreaksbr }}</p>
+                </div>
+            {% endfor %}
+        </div>
+        <form id="conversation-form" method="post" action="{% url 'chatter' %}">
+            {% csrf_token %}
+            <input id="conversation-input" type="text" name="message" placeholder="Type your message here, or 'clear' for a new conversation" autofocus>
+            <button type="submit">Submit</button>
+        </form>
+        <form method="POST" action="{% url 'save_conversation' %}">
+            {% csrf_token %}
+            <input type="text" name="title" placeholder="Conversation title">
+            <button type="submit">Save Conversation</button>
+        </form>
+    </div>
+{% endblock %}
+
