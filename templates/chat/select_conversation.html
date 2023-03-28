@@ -18,7 +18,7 @@
                 <h2>Saved Conversations</h2>
                 {% for saved_conversation in saved_conversations reversed %}
                     <div class="conversation-card" onclick="selectConversation(this, '{{ saved_conversation }}')">
-                        {{ saved_conversation|cut:".json" }}
+                        {{ saved_conversation|cut:"_saved.json" }}
                     </div>
                 {% endfor %}
                 <input type="hidden" id="selected_conversation_file" name="conversation_file">

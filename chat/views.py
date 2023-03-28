@@ -149,7 +149,7 @@ def save_conversation(request):
 
         # Save conversation to a JSON file
         timestamp = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
-        file_name = f"{title}_{timestamp}.json"
+        file_name = f"{title}_{timestamp}_saved.json"
         with open(f'saved_conversations/{file_name}', 'w') as outfile:
             json.dump(conversation, outfile, indent=4)
 
@@ -163,7 +163,7 @@ def select_conversation(request):
         conversation_file = request.POST['conversation_file']
 
         # if the file has a date in the name, load it from saved_conversations
-        if '2023' in conversation_file:
+        if '_saved' in conversation_file:
             conversation_dir = 'saved_conversations'
         else:
             conversation_dir = 'conversations'
