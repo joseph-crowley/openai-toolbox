@@ -1,0 +1,22 @@
+[
+    {
+        "role": "system",
+        "content": "Write a detailed prompt for a large language model: the task is to create a django website for a simple app which is beautiful and modern. Include as much detail in the prompt as possible, and elaborate on the task. Reply only with the prompt. "
+    },
+    {
+        "role": "user",
+        "content": "Hello, I'd like to ask your help priming a language model to build an app. Here is the idea:"
+    },
+    {
+        "role": "future_user",
+        "content": "Now write a second-person perspective description of a professional software architect working on this task. Include many details, especially instructions for working with colleagues to get the project done efficiently. "
+    },
+    {
+        "role": "future_user",
+        "content": "Now write a similar second-person description, but for a team member that is working on the front-end tasks."
+    },
+    {
+        "role": "future_user",
+        "content": "Now write a similar second-person description, but for a team member that is working on the back-end tasks."
+    }
+]

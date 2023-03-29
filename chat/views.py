@@ -35,9 +35,12 @@ def submit_message(request):
         # Get previous conversation
         conversation = request.session.get('messages', [])
 
+        past_messages = [message for message in conversation if 'future' not in message['role']]
+        future_messages = [{"role": message['role'].replace('future_',''), "content": message['content']} for message in conversation if 'future' in message['role']]
+
         # add the new message
         if user_input:
-            conversation.append({"role": "user", "content": user_input})
+            past_messages.append({"role": "user", "content": user_input})
 
         # Get optional parameters from the request
         temperature = float(request.POST.get('temperature', 1))
@@ -66,19 +69,24 @@ def submit_message(request):
         }
 
         # generate text
-        response = generate_message(conversation, **kwargs) 
-        conversation.append({"role": "assistant", "content": response})
+        response = generate_message(past_messages, **kwargs) 
+        past_messages.append({"role": "assistant", "content": response})
+
+        while future_messages:
+            past_messages.append(future_messages.pop(0))
+            response = generate_message(past_messages, **kwargs) 
+            past_messages.append({"role": "assistant", "content": response})
+
+        conversation = past_messages 
         request.session['messages'] = conversation
 
         # Save conversation to json file
         timestamp = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
         with open(f'backup_conversations/conversation_{timestamp}.json', 'w') as outfile:
             json.dump(conversation, outfile, indent=4)
-
-        return render(request, 'chat/conversation.html', {'messages': conversation})
     else:
         conversation = request.session.get('messages', [])
-        return render(request, 'chat/conversation.html', {'messages': conversation})
+    return render(request, 'chat/conversation.html', {'messages': conversation})
 
 def chatter(request):
     if request.method == 'POST':
@@ -172,7 +180,8 @@ def select_conversation(request):
             with open(f'{conversation_dir}/{conversation_file}', 'r') as infile:
                 conversation = json.load(infile)
                 request.session['messages'] = conversation
-                return render(request, 'chat/conversation.html', {'messages': conversation})
+                past_messages = [message for message in conversation if 'future' not in message['role']]
+                return render(request, 'chat/conversation.html', {'messages': past_messages})
         except FileNotFoundError:
             conversation_files = os.listdir('conversations')
             saved_files = os.listdir('saved_conversations')
